@@ -101,7 +101,7 @@ class Select extends React.Component {
 		].forEach((fn) => this[fn] = this[fn].bind(this));
 
 		this.state = {
-			inputValue: '',
+			inputValue: props.inputValue || '',
 			isFocused: false,
 			isOpen: false,
 			isPseudoFocused: false,
@@ -1263,6 +1263,7 @@ Select.propTypes = {
 	valueRenderer: PropTypes.func,        // valueRenderer: function (option) {}
 	wrapperStyle: PropTypes.object,       // optional style to apply to the component wrapper
 	isAlwaysOpen: PropTypes.bool,		  // optional value to check if dropdown has to kept open always
+	inputValue: PropTypes.string
 };
 
 Select.defaultProps = {
