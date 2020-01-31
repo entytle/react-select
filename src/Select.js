@@ -103,7 +103,7 @@ class Select extends React.Component {
 		this.state = {
 			inputValue: '',
 			isFocused: false,
-			isOpen: true,
+			isOpen: false,
 			isPseudoFocused: false,
 			required: false,
 		};
@@ -1128,7 +1128,7 @@ class Select extends React.Component {
 		} else {
 			focusedOption = this._focusedOption = null;
 		}
-		isOpen = true;
+		isOpen = this.props.isAlwaysOpen || isOpen;
 		let className = classNames('Select', this.props.className, {
 			'has-value': valueArray.length,
 			'is-clearable': this.props.clearable,

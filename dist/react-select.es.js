@@ -713,7 +713,7 @@ var Select$1 = function (_React$Component) {
 		_this.state = {
 			inputValue: '',
 			isFocused: false,
-			isOpen: true,
+			isOpen: false,
 			isPseudoFocused: false,
 			required: false
 		};
@@ -1840,7 +1840,7 @@ var Select$1 = function (_React$Component) {
 			} else {
 				focusedOption = this._focusedOption = null;
 			}
-			isOpen = true;
+			isOpen = this.props.isAlwaysOpen || isOpen;
 			var className = classNames('Select', this.props.className, {
 				'has-value': valueArray.length,
 				'is-clearable': this.props.clearable,
