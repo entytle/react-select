@@ -718,7 +718,7 @@ var Select$1 = function (_React$Component) {
 		_this.state = {
 			inputValue: '',
 			isFocused: false,
-			isOpen: props.isAlwaysOpen || false,
+			isOpen: true,
 			isPseudoFocused: false,
 			required: false
 		};
@@ -1845,6 +1845,7 @@ var Select$1 = function (_React$Component) {
 			} else {
 				focusedOption = this._focusedOption = null;
 			}
+			isOpen = true;
 			var className = classNames('Select', this.props.className, {
 				'has-value': valueArray.length,
 				'is-clearable': this.props.clearable,
@@ -1867,7 +1868,6 @@ var Select$1 = function (_React$Component) {
 					this.props.backspaceToRemoveMessage.replace('{label}', valueArray[valueArray.length - 1][this.props.labelKey])
 				);
 			}
-
 			return React__default.createElement(
 				'div',
 				{ ref: function ref(_ref7) {
