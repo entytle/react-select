@@ -718,7 +718,7 @@ var Select$1 = function (_React$Component) {
 		_this.state = {
 			inputValue: '',
 			isFocused: false,
-			isOpen: false,
+			isOpen: props.isAlwaysOpen || false,
 			isPseudoFocused: false,
 			required: false
 		};
@@ -1983,7 +1983,8 @@ Select$1.propTypes = {
 	valueComponent: PropTypes.func, // value component to render
 	valueKey: PropTypes.string, // path of the label value in option objects
 	valueRenderer: PropTypes.func, // valueRenderer: function (option) {}
-	wrapperStyle: PropTypes.object // optional style to apply to the component wrapper
+	wrapperStyle: PropTypes.object, // optional style to apply to the component wrapper
+	isAlwaysOpen: PropTypes.bool // optional value to check if dropdown has to kept open always
 };
 
 Select$1.defaultProps = {
@@ -2029,7 +2030,8 @@ Select$1.defaultProps = {
 	tabSelectsValue: true,
 	trimFilter: true,
 	valueComponent: Value,
-	valueKey: 'value'
+	valueKey: 'value',
+	isAlwaysOpen: false
 };
 
 var propTypes = {
