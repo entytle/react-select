@@ -720,7 +720,8 @@ var Select$1 = function (_React$Component) {
 			isFocused: false,
 			isOpen: props.isAlwaysOpen || false,
 			isPseudoFocused: false,
-			required: false
+			required: false,
+			focusedOption: props.focusedOption || {}
 		};
 		return _this;
 	}
@@ -1984,7 +1985,8 @@ Select$1.propTypes = {
 	valueRenderer: PropTypes.func, // valueRenderer: function (option) {}
 	wrapperStyle: PropTypes.object, // optional style to apply to the component wrapper
 	isAlwaysOpen: PropTypes.bool, // optional value to check if dropdown has to kept open always
-	inputValue: PropTypes.string
+	inputValue: PropTypes.string,
+	focusedOption: PropTypes.any
 };
 
 Select$1.defaultProps = {

@@ -106,6 +106,7 @@ class Select extends React.Component {
 			isOpen: props.isAlwaysOpen || false,
 			isPseudoFocused: false,
 			required: false,
+			focusedOption: props.focusedOption || {}
 		};
 	}
 
@@ -1262,7 +1263,8 @@ Select.propTypes = {
 	valueRenderer: PropTypes.func,        // valueRenderer: function (option) {}
 	wrapperStyle: PropTypes.object,       // optional style to apply to the component wrapper
 	isAlwaysOpen: PropTypes.bool,		  // optional value to check if dropdown has to kept open always
-	inputValue: PropTypes.string
+	inputValue: PropTypes.string,
+	focusedOption: PropTypes.any
 };
 
 Select.defaultProps = {
