@@ -2079,7 +2079,7 @@ var Async = function (_Component) {
 		_this._cache = props.cache === defaultCache ? {} : props.cache;
 
 		_this.state = {
-			inputValue: '',
+			inputValue: props.inputValue || '',
 			isLoading: false,
 			options: props.options
 		};
