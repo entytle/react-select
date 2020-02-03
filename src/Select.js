@@ -103,7 +103,7 @@ class Select extends React.Component {
 		this.state = {
 			inputValue: props.inputValue || '',
 			isFocused: false,
-			isOpen: false,
+			isOpen: props.isAlwaysOpen || false,
 			isPseudoFocused: false,
 			required: false,
 		};
@@ -148,7 +148,7 @@ class Select extends React.Component {
 
 	componentDidUpdate (prevProps, prevState) {
 		// focus to the selected option
-		if (this.menu && this.focused && this.state.isOpen && !this.hasScrolledToOption) {
+		if (this.menu && this.focused && (this.state.isOpen||this.props.isAlwaysOpen) && !this.hasScrolledToOption) {
 			const focusedOptionNode = findDOMNode(this.focused);
 			let menuNode = findDOMNode(this.menu);
 
@@ -165,7 +165,7 @@ class Select extends React.Component {
 			// actually need to scroll, as we've still confirmed that the
 			// option is in view.
 			this.hasScrolledToOption = true;
-		} else if (!this.state.isOpen) {
+		} else if (!this.state.isOpen || !this.props.isAlwaysOpen) {
 			this.hasScrolledToOption = false;
 		}
 
@@ -191,7 +191,7 @@ class Select extends React.Component {
 			this.setState({ isFocused: false }); // eslint-disable-line react/no-did-update-set-state
 			this.closeMenu();
 		}
-		if (prevState.isOpen !== this.state.isOpen) {
+		if (prevState.isOpen !== this.state.isOpen && !this.props.isAlwaysOpen) {
 			this.toggleTouchOutsideEvent(this.state.isOpen);
 			const handler = this.state.isOpen ? this.props.onOpen : this.props.onClose;
 			handler && handler();
@@ -268,7 +268,7 @@ class Select extends React.Component {
 			if (!this.state.isFocused) {
 				this._openAfterFocus = this.props.openOnClick;
 				this.focus();
-			} else if (!this.state.isOpen) {
+			} else if (!this.state.isOpen && !this.props.isAlwaysOpen) {
 				this.setState({
 					isOpen: true,
 					isPseudoFocused: false,
@@ -287,7 +287,7 @@ class Select extends React.Component {
 			// This code means that if a select is searchable, onClick the options menu will not appear, only on subsequent click will it open.
 			this.focus();
 			return this.setState({
-				isOpen: !this.state.isOpen,
+				isOpen: !this.state.isOpen || this.props.isAlwaysOpen,
 				focusedOption: null,
 			});
 		}
@@ -310,7 +310,7 @@ class Select extends React.Component {
 			input.value = '';
 
 			if (this._focusAfterClear) {
-				toOpen = false;
+				toOpen = this.props.isAlwaysOpen || false;
 				this._focusAfterClear = false;
 			}
 
@@ -367,12 +367,12 @@ class Select extends React.Component {
 		if(this.props.onCloseResetsInput) {
 			this.setState({
 				inputValue: this.handleInputValueChange(''),
-				isOpen: false,
+				isOpen: this.props.isAlwaysOpen || false,
 				isPseudoFocused: this.state.isFocused && !this.props.multi,
 			});
 		} else {
 			this.setState({
-				isOpen: false,
+				isOpen: this.props.isAlwaysOpen || false,
 				isPseudoFocused: this.state.isFocused && !this.props.multi
 			});
 		}
@@ -391,7 +391,7 @@ class Select extends React.Component {
 
 		this.setState({
 			isFocused: true,
-			isOpen: !!toOpen,
+			isOpen: this.props.isAlwaysOpen || !!toOpen,
 		});
 
 		this._focusAfterClear = false;
@@ -410,7 +410,7 @@ class Select extends React.Component {
 		}
 		let onBlurredState = {
 			isFocused: false,
-			isOpen: false,
+			isOpen: this.props.isAlwaysOpen || false,
 			isPseudoFocused: false,
 		};
 		if (this.props.onBlurResetsInput) {
@@ -474,7 +474,7 @@ class Select extends React.Component {
 				}
 				break;
 			case 9: // tab
-				if (event.shiftKey || !this.state.isOpen || !this.props.tabSelectsValue) {
+				if (event.shiftKey || !(this.state.isOpen || this.props.isAlwaysOpen) || !this.props.tabSelectsValue) {
 					break;
 				}
 				event.preventDefault();
@@ -483,7 +483,7 @@ class Select extends React.Component {
 			case 13: // enter
 				event.preventDefault();
 				event.stopPropagation();
-				if (this.state.isOpen) {
+				if (this.state.isOpen || this.props.isAlwaysOpen) {
 					this.selectFocusedOption();
 				} else {
 					this.focusNextOption();
@@ -491,7 +491,7 @@ class Select extends React.Component {
 				break;
 			case 27: // escape
 				event.preventDefault();
-				if (this.state.isOpen) {
+				if (this.state.isOpen || this.props.isAlwaysOpen) {
 					this.closeMenu();
 					event.stopPropagation();
 				} else if (this.props.clearable && this.props.escapeClearsValue) {
@@ -504,7 +504,7 @@ class Select extends React.Component {
 					break;
 				}
 				event.preventDefault();
-				if (!this.state.isOpen) {
+				if (!this.state.isOpen || !this.props.isAlwaysOpen) {
 					this.focusNextOption();
 					break;
 				}
@@ -617,7 +617,7 @@ class Select extends React.Component {
 			this.setState({
 				focusedIndex: null,
 				inputValue: this.handleInputValueChange(updatedValue),
-				isOpen: !this.props.closeOnSelect,
+				isOpen: !this.props.closeOnSelect || this.props.isAlwaysOpen,
 			}, () => {
 				const valueArray = this.getValueArray(this.props.value);
 				if (valueArray.some(i => i[this.props.valueKey] === value[this.props.valueKey])) {
@@ -629,7 +629,7 @@ class Select extends React.Component {
 		} else {
 			this.setState({
 				inputValue: this.handleInputValueChange(updatedValue),
-				isOpen: !this.props.closeOnSelect,
+				isOpen: !this.props.closeOnSelect || this.props.isAlwaysOpen,
 				isPseudoFocused: this.state.isFocused,
 			}, () => {
 				this.setValue(value);
@@ -677,7 +677,7 @@ class Select extends React.Component {
 		this.setValue(this.getResetValue());
 		this.setState({
 			inputValue: this.handleInputValueChange(''),
-			isOpen: false,
+			isOpen: this.props.isAlwaysOpen || false,
 		}, this.focus);
 
 		this._focusAfterClear = true;
@@ -728,7 +728,7 @@ class Select extends React.Component {
 			.map((option, index) => ({ option, index }))
 			.filter(option => !option.option.disabled);
 		this._scrollToFocusedOptionOnUpdate = true;
-		if (!this.state.isOpen) {
+		if (!this.state.isOpen && !this.props.isAlwaysOpen) {
 			const newState = {
 				focusedOption: this._focusedOption || (options.length ? options[dir === 'next' ? 0 : options.length - 1].option : null),
 				isOpen: true,
@@ -850,7 +850,7 @@ class Select extends React.Component {
 
 	renderInput (valueArray, focusedOptionIndex) {
 		const className = classNames('Select-input', this.props.inputProps.className);
-		const isOpen = this.state.isOpen;
+		const isOpen = this.state.isOpen || this.props.isAlwaysOpen;
 
 		const ariaOwns = classNames({
 			[`${this._instancePrefix}-list`]: isOpen,
@@ -956,7 +956,7 @@ class Select extends React.Component {
 		if (!this.props.arrowRenderer) return;
 
 		const onMouseDown = this.handleMouseDownOnArrow;
-		const isOpen = this.state.isOpen;
+		const isOpen = this.state.isOpen || this.props.isAlwaysOpen;
 		const arrow = this.props.arrowRenderer({ onMouseDown, isOpen });
 
 		if (!arrow) {
@@ -1118,8 +1118,8 @@ class Select extends React.Component {
 	render () {
 		let valueArray = this.getValueArray(this.props.value);
 		let options = this._visibleOptions = this.filterOptions(this.props.multi && this.props.removeSelected ? valueArray : null);
-		let isOpen = this.state.isOpen;
-		if (this.props.multi && !options.length && valueArray.length && !this.state.inputValue) isOpen = false;
+		let isOpen = this.state.isOpen || this.props.isAlwaysOpen;
+		if (this.props.multi && !options.length && valueArray.length && !this.state.inputValue) isOpen = this.props.isAlwaysOpen || false;
 		const focusedOptionIndex = this.getFocusableOptionIndex(valueArray[0]);
 
 		let focusedOption = null;
@@ -1128,7 +1128,6 @@ class Select extends React.Component {
 		} else {
 			focusedOption = this._focusedOption = null;
 		}
-		isOpen = this.props.isAlwaysOpen || isOpen;
 		let className = classNames('Select', this.props.className, {
 			'has-value': valueArray.length,
 			'is-clearable': this.props.clearable,
