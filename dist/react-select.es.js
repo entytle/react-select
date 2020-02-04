@@ -641,6 +641,13 @@ Value.propTypes = {
   Licensed under the MIT License (MIT), see
   http://jedwatson.github.io/react-select
 */
+/*
+*  Added isAlwaysOpen prop which enables to always keep open options dropdown
+*  Added inputValue prop which persists input search value when isAlwaysOpen is true,
+*  inputValue in state takes initial value from inputValue prop.
+*  changed default value of onBlurResetsInput, onSelectResetsInput to false, so that input search value doesn't get cleared
+*  when isAlwaysOpen is true
+* */
 var stringifyValue = function stringifyValue(value) {
 	return typeof value === 'string' ? value : value !== null && JSON.stringify(value) || '';
 };
@@ -2009,9 +2016,9 @@ Select$1.defaultProps = {
 	menuRenderer: menuRenderer,
 	multi: false,
 	noResultsText: 'No results found',
-	onBlurResetsInput: false,
+	onBlurResetsInput: true,
 	onCloseResetsInput: true,
-	onSelectResetsInput: false,
+	onSelectResetsInput: true,
 	openOnClick: true,
 	optionComponent: Option,
 	pageSize: 5,
