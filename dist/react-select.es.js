@@ -711,7 +711,7 @@ var Select$1 = function (_React$Component) {
 		});
 
 		_this.state = {
-			inputValue: '',
+			inputValue: props.inputValue || '',
 			isFocused: false,
 			isOpen: props.isAlwaysOpen || false,
 			isPseudoFocused: false,
@@ -1978,7 +1978,8 @@ Select$1.propTypes = {
 	valueKey: PropTypes.string, // path of the label value in option objects
 	valueRenderer: PropTypes.func, // valueRenderer: function (option) {}
 	wrapperStyle: PropTypes.object, // optional style to apply to the component wrapper
-	isAlwaysOpen: PropTypes.bool // optional value to check if dropdown has to kept open always
+	isAlwaysOpen: PropTypes.bool, // optional value to check if dropdown has to kept open always
+	inputValue: PropTypes.string // input search value
 };
 
 Select$1.defaultProps = {
@@ -2029,6 +2030,7 @@ Select$1.defaultProps = {
 };
 
 var propTypes = {
+	inputValue: PropTypes.string,
 	autoload: PropTypes.bool.isRequired, // automatically call the `loadOptions` prop on-mount; defaults to true
 	cache: PropTypes.any, // object to use to cache results; set to null/false to disable caching
 	children: PropTypes.func.isRequired, // Child function responsible for creating the inner Select component; (props: Object): PropTypes.element
@@ -2078,7 +2080,7 @@ var Async = function (_Component) {
 		_this._cache = props.cache === defaultCache ? {} : props.cache;
 
 		_this.state = {
-			inputValue: '',
+			inputValue: props.inputValue || '',
 			isLoading: false,
 			options: props.options
 		};
