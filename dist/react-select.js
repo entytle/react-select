@@ -716,12 +716,11 @@ var Select$1 = function (_React$Component) {
 		});
 
 		_this.state = {
-			inputValue: props.inputValue || '',
+			inputValue: '',
 			isFocused: false,
 			isOpen: props.isAlwaysOpen || false,
 			isPseudoFocused: false,
-			required: false,
-			focusedOption: props.focusedOption || {}
+			required: false
 		};
 		return _this;
 	}
@@ -1984,9 +1983,7 @@ Select$1.propTypes = {
 	valueKey: PropTypes.string, // path of the label value in option objects
 	valueRenderer: PropTypes.func, // valueRenderer: function (option) {}
 	wrapperStyle: PropTypes.object, // optional style to apply to the component wrapper
-	isAlwaysOpen: PropTypes.bool, // optional value to check if dropdown has to kept open always
-	inputValue: PropTypes.string,
-	focusedOption: PropTypes.any
+	isAlwaysOpen: PropTypes.bool // optional value to check if dropdown has to kept open always
 };
 
 Select$1.defaultProps = {
@@ -2016,9 +2013,9 @@ Select$1.defaultProps = {
 	menuRenderer: menuRenderer,
 	multi: false,
 	noResultsText: 'No results found',
-	onBlurResetsInput: false,
+	onBlurResetsInput: true,
 	onCloseResetsInput: true,
-	onSelectResetsInput: false,
+	onSelectResetsInput: true,
 	openOnClick: true,
 	optionComponent: Option,
 	pageSize: 5,
@@ -2086,7 +2083,7 @@ var Async = function (_Component) {
 		_this._cache = props.cache === defaultCache ? {} : props.cache;
 
 		_this.state = {
-			inputValue: props.inputValue || '',
+			inputValue: '',
 			isLoading: false,
 			options: props.options
 		};

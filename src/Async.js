@@ -56,7 +56,7 @@ export default class Async extends Component {
 		this._cache = props.cache === defaultCache ? {} : props.cache;
 
 		this.state = {
-			inputValue: props.inputValue || '',
+			inputValue: '',
 			isLoading: false,
 			options: props.options,
 		};
