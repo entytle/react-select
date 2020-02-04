@@ -3,6 +3,13 @@
   Licensed under the MIT License (MIT), see
   http://jedwatson.github.io/react-select
 */
+/*
+*  Added isAlwaysOpen prop which enables to always keep open options dropdown
+*  Added inputValue prop which persists input search value when isAlwaysOpen is true,
+*  inputValue in state takes initial value from inputValue prop.
+*  changed default value of onBlurResetsInput, onSelectResetsInput to false, so that input search value doesn't get cleared
+*  when isAlwaysOpen is true
+* */
 import AutosizeInput from 'react-input-autosize';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
