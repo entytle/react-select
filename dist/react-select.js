@@ -646,6 +646,11 @@ Value.propTypes = {
   Licensed under the MIT License (MIT), see
   http://jedwatson.github.io/react-select
 */
+/*
+*  Added isAlwaysOpen prop which enables to always keep open options dropdown
+*  Added inputValue prop which persists input search value when isAlwaysOpen is true,
+*  inputValue in state takes initial value from inputValue prop.
+* */
 var stringifyValue = function stringifyValue(value) {
 	return typeof value === 'string' ? value : value !== null && JSON.stringify(value) || '';
 };
@@ -716,9 +721,9 @@ var Select$1 = function (_React$Component) {
 		});
 
 		_this.state = {
-			inputValue: '',
+			inputValue: props.inputValue || '',
 			isFocused: false,
-			isOpen: false,
+			isOpen: props.isAlwaysOpen || false,
 			isPseudoFocused: false,
 			required: false
 		};
@@ -769,7 +774,7 @@ var Select$1 = function (_React$Component) {
 		key: 'componentDidUpdate',
 		value: function componentDidUpdate(prevProps, prevState) {
 			// focus to the selected option
-			if (this.menu && this.focused && this.state.isOpen && !this.hasScrolledToOption) {
+			if (this.menu && this.focused && (this.state.isOpen || this.props.isAlwaysOpen) && !this.hasScrolledToOption) {
 				var focusedOptionNode = reactDom.findDOMNode(this.focused);
 				var menuNode = reactDom.findDOMNode(this.menu);
 
@@ -786,7 +791,7 @@ var Select$1 = function (_React$Component) {
 				// actually need to scroll, as we've still confirmed that the
 				// option is in view.
 				this.hasScrolledToOption = true;
-			} else if (!this.state.isOpen) {
+			} else if (!this.state.isOpen || !this.props.isAlwaysOpen) {
 				this.hasScrolledToOption = false;
 			}
 
@@ -812,7 +817,7 @@ var Select$1 = function (_React$Component) {
 				this.setState({ isFocused: false }); // eslint-disable-line react/no-did-update-set-state
 				this.closeMenu();
 			}
-			if (prevState.isOpen !== this.state.isOpen) {
+			if (prevState.isOpen !== this.state.isOpen && !this.props.isAlwaysOpen) {
 				this.toggleTouchOutsideEvent(this.state.isOpen);
 				var handler = this.state.isOpen ? this.props.onOpen : this.props.onClose;
 				handler && handler();
@@ -897,7 +902,7 @@ var Select$1 = function (_React$Component) {
 				if (!this.state.isFocused) {
 					this._openAfterFocus = this.props.openOnClick;
 					this.focus();
-				} else if (!this.state.isOpen) {
+				} else if (!this.state.isOpen && !this.props.isAlwaysOpen) {
 					this.setState({
 						isOpen: true,
 						isPseudoFocused: false,
@@ -916,7 +921,7 @@ var Select$1 = function (_React$Component) {
 				// This code means that if a select is searchable, onClick the options menu will not appear, only on subsequent click will it open.
 				this.focus();
 				return this.setState({
-					isOpen: !this.state.isOpen,
+					isOpen: !this.state.isOpen || this.props.isAlwaysOpen,
 					focusedOption: null
 				});
 			}
@@ -939,7 +944,7 @@ var Select$1 = function (_React$Component) {
 				input.value = '';
 
 				if (this._focusAfterClear) {
-					toOpen = false;
+					toOpen = this.props.isAlwaysOpen || false;
 					this._focusAfterClear = false;
 				}
 
@@ -999,12 +1004,12 @@ var Select$1 = function (_React$Component) {
 			if (this.props.onCloseResetsInput) {
 				this.setState({
 					inputValue: this.handleInputValueChange(''),
-					isOpen: false,
+					isOpen: this.props.isAlwaysOpen || false,
 					isPseudoFocused: this.state.isFocused && !this.props.multi
 				});
 			} else {
 				this.setState({
-					isOpen: false,
+					isOpen: this.props.isAlwaysOpen || false,
 					isPseudoFocused: this.state.isFocused && !this.props.multi
 				});
 			}
@@ -1024,7 +1029,7 @@ var Select$1 = function (_React$Component) {
 
 			this.setState({
 				isFocused: true,
-				isOpen: !!toOpen
+				isOpen: this.props.isAlwaysOpen || !!toOpen
 			});
 
 			this._focusAfterClear = false;
@@ -1044,7 +1049,7 @@ var Select$1 = function (_React$Component) {
 			}
 			var onBlurredState = {
 				isFocused: false,
-				isOpen: false,
+				isOpen: this.props.isAlwaysOpen || false,
 				isPseudoFocused: false
 			};
 			if (this.props.onBlurResetsInput) {
@@ -1114,7 +1119,7 @@ var Select$1 = function (_React$Component) {
 					break;
 				case 9:
 					// tab
-					if (event.shiftKey || !this.state.isOpen || !this.props.tabSelectsValue) {
+					if (event.shiftKey || !(this.state.isOpen || this.props.isAlwaysOpen) || !this.props.tabSelectsValue) {
 						break;
 					}
 					event.preventDefault();
@@ -1124,7 +1129,7 @@ var Select$1 = function (_React$Component) {
 					// enter
 					event.preventDefault();
 					event.stopPropagation();
-					if (this.state.isOpen) {
+					if (this.state.isOpen || this.props.isAlwaysOpen) {
 						this.selectFocusedOption();
 					} else {
 						this.focusNextOption();
@@ -1133,7 +1138,7 @@ var Select$1 = function (_React$Component) {
 				case 27:
 					// escape
 					event.preventDefault();
-					if (this.state.isOpen) {
+					if (this.state.isOpen || this.props.isAlwaysOpen) {
 						this.closeMenu();
 						event.stopPropagation();
 					} else if (this.props.clearable && this.props.escapeClearsValue) {
@@ -1147,7 +1152,7 @@ var Select$1 = function (_React$Component) {
 						break;
 					}
 					event.preventDefault();
-					if (!this.state.isOpen) {
+					if (!this.state.isOpen || !this.props.isAlwaysOpen) {
 						this.focusNextOption();
 						break;
 					}
@@ -1288,7 +1293,7 @@ var Select$1 = function (_React$Component) {
 				this.setState({
 					focusedIndex: null,
 					inputValue: this.handleInputValueChange(updatedValue),
-					isOpen: !this.props.closeOnSelect
+					isOpen: !this.props.closeOnSelect || this.props.isAlwaysOpen
 				}, function () {
 					var valueArray = _this3.getValueArray(_this3.props.value);
 					if (valueArray.some(function (i) {
@@ -1302,7 +1307,7 @@ var Select$1 = function (_React$Component) {
 			} else {
 				this.setState({
 					inputValue: this.handleInputValueChange(updatedValue),
-					isOpen: !this.props.closeOnSelect,
+					isOpen: !this.props.closeOnSelect || this.props.isAlwaysOpen,
 					isPseudoFocused: this.state.isFocused
 				}, function () {
 					_this3.setValue(value);
@@ -1362,7 +1367,7 @@ var Select$1 = function (_React$Component) {
 			this.setValue(this.getResetValue());
 			this.setState({
 				inputValue: this.handleInputValueChange(''),
-				isOpen: false
+				isOpen: this.props.isAlwaysOpen || false
 			}, this.focus);
 
 			this._focusAfterClear = true;
@@ -1424,7 +1429,7 @@ var Select$1 = function (_React$Component) {
 				return !option.option.disabled;
 			});
 			this._scrollToFocusedOptionOnUpdate = true;
-			if (!this.state.isOpen) {
+			if (!this.state.isOpen && !this.props.isAlwaysOpen) {
 				var newState = {
 					focusedOption: this._focusedOption || (options.length ? options[dir === 'next' ? 0 : options.length - 1].option : null),
 					isOpen: true
@@ -1564,7 +1569,7 @@ var Select$1 = function (_React$Component) {
 			    _this6 = this;
 
 			var className = classNames('Select-input', this.props.inputProps.className);
-			var isOpen = this.state.isOpen;
+			var isOpen = this.state.isOpen || this.props.isAlwaysOpen;
 
 			var ariaOwns = classNames((_classNames = {}, defineProperty(_classNames, this._instancePrefix + '-list', isOpen), defineProperty(_classNames, this._instancePrefix + '-backspace-remove-message', this.props.multi && !this.props.disabled && this.state.isFocused && !this.state.inputValue), _classNames));
 
@@ -1659,7 +1664,7 @@ var Select$1 = function (_React$Component) {
 			if (!this.props.arrowRenderer) return;
 
 			var onMouseDown = this.handleMouseDownOnArrow;
-			var isOpen = this.state.isOpen;
+			var isOpen = this.state.isOpen || this.props.isAlwaysOpen;
 			var arrow = this.props.arrowRenderer({ onMouseDown: onMouseDown, isOpen: isOpen });
 
 			if (!arrow) {
@@ -1835,8 +1840,8 @@ var Select$1 = function (_React$Component) {
 
 			var valueArray = this.getValueArray(this.props.value);
 			var options = this._visibleOptions = this.filterOptions(this.props.multi && this.props.removeSelected ? valueArray : null);
-			var isOpen = this.state.isOpen;
-			if (this.props.multi && !options.length && valueArray.length && !this.state.inputValue) isOpen = false;
+			var isOpen = this.state.isOpen || this.props.isAlwaysOpen;
+			if (this.props.multi && !options.length && valueArray.length && !this.state.inputValue) isOpen = this.props.isAlwaysOpen || false;
 			var focusedOptionIndex = this.getFocusableOptionIndex(valueArray[0]);
 
 			var focusedOption = null;
@@ -1867,7 +1872,6 @@ var Select$1 = function (_React$Component) {
 					this.props.backspaceToRemoveMessage.replace('{label}', valueArray[valueArray.length - 1][this.props.labelKey])
 				);
 			}
-
 			return React__default.createElement(
 				'div',
 				{ ref: function ref(_ref7) {
@@ -1983,7 +1987,9 @@ Select$1.propTypes = {
 	valueComponent: PropTypes.func, // value component to render
 	valueKey: PropTypes.string, // path of the label value in option objects
 	valueRenderer: PropTypes.func, // valueRenderer: function (option) {}
-	wrapperStyle: PropTypes.object // optional style to apply to the component wrapper
+	wrapperStyle: PropTypes.object, // optional style to apply to the component wrapper
+	isAlwaysOpen: PropTypes.bool, // optional value to check if dropdown has to kept open always
+	inputValue: PropTypes.string // input search value
 };
 
 Select$1.defaultProps = {
@@ -2029,10 +2035,12 @@ Select$1.defaultProps = {
 	tabSelectsValue: true,
 	trimFilter: true,
 	valueComponent: Value,
-	valueKey: 'value'
+	valueKey: 'value',
+	isAlwaysOpen: false
 };
 
 var propTypes = {
+	inputValue: PropTypes.string,
 	autoload: PropTypes.bool.isRequired, // automatically call the `loadOptions` prop on-mount; defaults to true
 	cache: PropTypes.any, // object to use to cache results; set to null/false to disable caching
 	children: PropTypes.func.isRequired, // Child function responsible for creating the inner Select component; (props: Object): PropTypes.element
@@ -2082,7 +2090,7 @@ var Async = function (_Component) {
 		_this._cache = props.cache === defaultCache ? {} : props.cache;
 
 		_this.state = {
-			inputValue: '',
+			inputValue: props.inputValue || '',
 			isLoading: false,
 			options: props.options
 		};
