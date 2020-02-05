@@ -650,8 +650,6 @@ Value.propTypes = {
 *  Added isAlwaysOpen prop which enables to always keep open options dropdown
 *  Added inputValue prop which persists input search value when isAlwaysOpen is true,
 *  inputValue in state takes initial value from inputValue prop.
-*  changed default value of onBlurResetsInput, onSelectResetsInput to false, so that input search value doesn't get cleared
-*  when isAlwaysOpen is true
 * */
 var stringifyValue = function stringifyValue(value) {
 	return typeof value === 'string' ? value : value !== null && JSON.stringify(value) || '';
