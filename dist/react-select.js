@@ -725,7 +725,8 @@ var Select$1 = function (_React$Component) {
 			isFocused: false,
 			isOpen: props.isAlwaysOpen || false,
 			isPseudoFocused: false,
-			required: false
+			required: false,
+			isSelected: false
 		};
 		return _this;
 	}
@@ -767,7 +768,9 @@ var Select$1 = function (_React$Component) {
 			}
 
 			if (this.state.inputValue && this.props.value !== nextProps.value && nextProps.onSelectResetsInput) {
-				this.setState({ inputValue: this.handleInputValueChange('') });
+				if (this.state.isSelected) {
+					this.setState({ inputValue: this.handleInputValueChange('') });
+				}
 			}
 		}
 	}, {
@@ -1067,6 +1070,7 @@ var Select$1 = function (_React$Component) {
 			}
 
 			this.setState({
+				isSelected: false,
 				inputValue: newInputValue,
 				isOpen: true,
 				isPseudoFocused: false
@@ -1082,6 +1086,7 @@ var Select$1 = function (_React$Component) {
 				}
 			}
 			this.setState({
+				isSelected: false,
 				inputValue: newValue
 			});
 		}
@@ -1291,6 +1296,7 @@ var Select$1 = function (_React$Component) {
 			var updatedValue = this.props.onSelectResetsInput ? '' : this.state.inputValue;
 			if (this.props.multi) {
 				this.setState({
+					isSelected: true,
 					focusedIndex: null,
 					inputValue: this.handleInputValueChange(updatedValue),
 					isOpen: !this.props.closeOnSelect || this.props.isAlwaysOpen
@@ -1306,6 +1312,7 @@ var Select$1 = function (_React$Component) {
 				});
 			} else {
 				this.setState({
+					isSelected: true,
 					inputValue: this.handleInputValueChange(updatedValue),
 					isOpen: !this.props.closeOnSelect || this.props.isAlwaysOpen,
 					isPseudoFocused: this.state.isFocused
