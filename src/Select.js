@@ -148,7 +148,7 @@ class Select extends React.Component {
 		}
 
 		if ( this.state.inputValue && this.props.value !== nextProps.value && nextProps.onSelectResetsInput) {
-			if(this.state.isSelected){
+			if(this.state.isSelected && !this.props.isAlwaysOpen){
 				this.setState({ inputValue: this.handleInputValueChange('') });
 			}
 		}
