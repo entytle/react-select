@@ -49,7 +49,16 @@ class CreatableSelect extends React.Component {
 		// This covers async edge-cases where a newly-created Option isn't yet in the async-loaded array.
 		const excludeOptions = params[2] || [];
 
-		const filteredOptions = filterOptions(...params) || [];
+		/* Sometimes filterOptions is false and sometimes it is function so following check on basis of that
+		* changed empty array to function defaultFilterOptions call as it was rendering empty options list
+		* when filterOptions is boolean, defaultFilterOptions return empty array when there are no options,
+		* hence from this it will work ideally */
+
+		const filteredOptions = typeof filterOptions === 'function'
+			? filterOptions(...params)
+			: defaultFilterOptions(...params);
+
+		// const filteredOptions = filterOptions ? filterOptions(...params) : [];
 
 		if (isValidNewOption({ label: this.inputValue })) {
 			const { newOptionCreator } = this.props;

@@ -2337,7 +2337,14 @@ var CreatableSelect = function (_React$Component) {
 
 			var excludeOptions = (arguments.length <= 2 ? undefined : arguments[2]) || [];
 
-			var filteredOptions = filterOptions$$1.apply(undefined, arguments) || [];
+			/* Sometimes filterOptions is false and sometimes it is function so following check on basis of that
+   * changed empty array to function defaultFilterOptions call as it was rendering empty options list
+   * when filterOptions is boolean, defaultFilterOptions return empty array when there are no options,
+   * hence from this it will work ideally */
+
+			var filteredOptions = typeof filterOptions$$1 === 'function' ? filterOptions$$1.apply(undefined, arguments) : filterOptions.apply(undefined, arguments);
+
+			// const filteredOptions = filterOptions ? filterOptions(...params) : [];
 
 			if (isValidNewOption({ label: this.inputValue })) {
 				var _newOptionCreator = this.props.newOptionCreator;
