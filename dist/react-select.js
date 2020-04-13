@@ -1511,7 +1511,7 @@ var Select$1 = function (_React$Component) {
 	}, {
 		key: 'renderLoading',
 		value: function renderLoading() {
-			if (!this.props.isLoading) return;
+			if (!(this.props.isLoading || this.props.loading)) return;
 			return React__default.createElement(
 				'span',
 				{ className: 'Select-loading-zone', 'aria-hidden': 'true' },
@@ -1952,6 +1952,7 @@ Select$1.propTypes = {
 	inputRenderer: PropTypes.func, // returns a custom input component
 	instanceId: PropTypes.string, // set the components instanceId
 	isLoading: PropTypes.bool, // whether the Select is loading externally or not (such as options being loaded)
+	loading: PropTypes.bool,
 	joinValues: PropTypes.bool, // joins multiple values into a single form field with the delimiter (legacy mode)
 	labelKey: PropTypes.string, // path of the label value in option objects
 	matchPos: PropTypes.string, // (any|start) match the start or entire string when filtering
@@ -2022,6 +2023,7 @@ Select$1.defaultProps = {
 	ignoreCase: true,
 	inputProps: {},
 	isLoading: false,
+	loading: false,
 	joinValues: false,
 	labelKey: 'label',
 	matchPos: 'any',
