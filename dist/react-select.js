@@ -63,35 +63,39 @@ var filterOptions = function filterOptions(options, filterValue, excludeOptions,
 		return i[props.valueKey];
 	});
 
-	return options.filter(function (option) {
-		if (excludeOptions && excludeOptions.indexOf(option[props.valueKey]) > -1) return false;
-		if (props.filterOption) return props.filterOption.call(undefined, option, filterValue);
-		if (!filterValue) return true;
+	if (options && Array.isArray(options)) {
+		return options.filter(function (option) {
+			if (excludeOptions && excludeOptions.indexOf(option[props.valueKey]) > -1) return false;
+			if (props.filterOption) return props.filterOption.call(undefined, option, filterValue);
+			if (!filterValue) return true;
 
-		var value = option[props.valueKey];
-		var label = option[props.labelKey];
-		var hasValue = isValid(value);
-		var hasLabel = isValid(label);
+			var value = option[props.valueKey];
+			var label = option[props.labelKey];
+			var hasValue = isValid(value);
+			var hasLabel = isValid(label);
 
-		if (!hasValue && !hasLabel) {
-			return false;
-		}
+			if (!hasValue && !hasLabel) {
+				return false;
+			}
 
-		var valueTest = hasValue ? String(value) : null;
-		var labelTest = hasLabel ? String(label) : null;
+			var valueTest = hasValue ? String(value) : null;
+			var labelTest = hasLabel ? String(label) : null;
 
-		if (props.ignoreAccents) {
-			if (valueTest && props.matchProp !== 'label') valueTest = stripDiacritics(valueTest);
-			if (labelTest && props.matchProp !== 'value') labelTest = stripDiacritics(labelTest);
-		}
+			if (props.ignoreAccents) {
+				if (valueTest && props.matchProp !== 'label') valueTest = stripDiacritics(valueTest);
+				if (labelTest && props.matchProp !== 'value') labelTest = stripDiacritics(labelTest);
+			}
 
-		if (props.ignoreCase) {
-			if (valueTest && props.matchProp !== 'label') valueTest = valueTest.toLowerCase();
-			if (labelTest && props.matchProp !== 'value') labelTest = labelTest.toLowerCase();
-		}
+			if (props.ignoreCase) {
+				if (valueTest && props.matchProp !== 'label') valueTest = valueTest.toLowerCase();
+				if (labelTest && props.matchProp !== 'value') labelTest = labelTest.toLowerCase();
+			}
 
-		return props.matchPos === 'start' ? valueTest && props.matchProp !== 'label' && valueTest.substr(0, filterValue.length) === filterValue || labelTest && props.matchProp !== 'value' && labelTest.substr(0, filterValue.length) === filterValue : valueTest && props.matchProp !== 'label' && valueTest.indexOf(filterValue) >= 0 || labelTest && props.matchProp !== 'value' && labelTest.indexOf(filterValue) >= 0;
-	});
+			return props.matchPos === 'start' ? valueTest && props.matchProp !== 'label' && valueTest.substr(0, filterValue.length) === filterValue || labelTest && props.matchProp !== 'value' && labelTest.substr(0, filterValue.length) === filterValue : valueTest && props.matchProp !== 'label' && valueTest.indexOf(filterValue) >= 0 || labelTest && props.matchProp !== 'value' && labelTest.indexOf(filterValue) >= 0;
+		});
+	} else {
+		return [];
+	}
 };
 
 var menuRenderer = function menuRenderer(_ref) {
@@ -2338,9 +2342,9 @@ var CreatableSelect = function (_React$Component) {
 			var excludeOptions = (arguments.length <= 2 ? undefined : arguments[2]) || [];
 
 			/* Sometimes filterOptions is false and sometimes it is function so following check on basis of that
-   * changed empty array to function defaultFilterOptions call as it was rendering empty options list
-   * when filterOptions is boolean, defaultFilterOptions return empty array when there are no options,
-   * hence from this it will work ideally */
+   earlier when options had values but filterOptions was boolean false it returned empty array.
+   Now when filterOptions is boolean, defaultFilterOptions return empty array when there are no options,
+   hence from this it will work ideally */
 
 			var filteredOptions = typeof filterOptions$$1 === 'function' ? filterOptions$$1.apply(undefined, arguments) : filterOptions.apply(undefined, arguments);
 
